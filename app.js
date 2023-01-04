@@ -63,7 +63,7 @@ app
     });
   })
   .put((req, res) => {
-    Article.update(
+    Article.updateOne(
       { title: req.params.articleTitle },
       {
         title: req.body.title,
@@ -72,14 +72,35 @@ app
       { overwrite: true },
       (err) => {
         if (!err) {
-          console.log("Successfully Updated");
+          res.send("Successfully Updated");
+        } else {
+          res.send(err);
         }
       }
     );
   })
-  .patch((req, res)=> {
-  Article.update()
+  .patch((req, res) => {
+    Article.updateOne(
+      { title: req.params.articleTitle },
+      { $set: req.body },
+      (err) => {
+        if (!err) {
+          res.send("succesfully patched");
+        } else {
+          res.send(err);
+        }
+      }
+    );
   })
+  .delete((req, res) => {
+    Article.deleteOne({ title: req.params.articleTitle }, (err) => {
+      if (!err) {
+        res.send("succesfully Deleted");
+      } else {
+        res.send(err);
+      }
+    });
+  });
 
 app.listen(3000, () => {
   console.log("Server is running at port 3000");
